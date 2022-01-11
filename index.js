@@ -6,7 +6,7 @@ let app = express();
 app.use(express.json());
 
 //--------------Routes
-require("./routes/JSroutes.js");
+//require("./routes/JSroutes.js");
 
 //------------Pattern
 const classes = [
@@ -19,6 +19,7 @@ const classes = [
   }
 ];
 
+//--------------Routes
 app.get("/classes", function (req, res) {
   res.send(classes);
 });
@@ -34,16 +35,16 @@ app.get("", function (req, res) {
 });
 
 app.post("/classes", function (req, res) {
-    const class = {
-         id: classes.length + 1,
-         name: req.body.name,
-         location: req.body.location,
-         price: req.body.price,
-         schedule: req.body.schedule
-    };
-    classes.push(class);
-    res.send(class)
-})
+  const postAclass = {
+    id: classes.length + 1,
+    name: req.body.name,
+    location: req.body.location,
+    price: req.body.price,
+    schedule: req.body.schedule
+  };
+  classes.push(postAclass);
+  res.send(postAclass);
+});
 
 //---------------Port
 const port = process.env.PORT || 3000;
