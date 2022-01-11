@@ -46,6 +46,16 @@ app.post("/classes", function (req, res) {
   res.send(postAclass);
 });
 
+app.put("/classes/:id", function (req, res) {
+  let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
+  if (!findAclass) res.status(404).send("The class with that id was not found");
+  findAclass.name = req.body.name;
+  findAclass.location = req.body.location;
+  findAclass.price = req.body.price;
+  findAclass.schedule = req.body.schedule;
+  res.send(findAclass);
+});
+
 //---------------Port
 const port = process.env.PORT || 3000;
 
