@@ -56,6 +56,15 @@ app.put("/classes/:id", function (req, res) {
   res.send(findAclass);
 });
 
+app.delete("/classes/:id", function (req, res) {
+  let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
+  if (!findAclass) res.status(404).send("The class with that id was not found");
+  const index = classes.indexOf(findAclass);
+  res.send(index);
+  classes.splice(index, 1);
+  res.send(findAclass);
+});
+
 //---------------Port
 const port = process.env.PORT || 3000;
 
