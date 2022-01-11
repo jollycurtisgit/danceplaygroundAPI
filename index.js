@@ -1,12 +1,10 @@
+const express = require("express");
+
 //------------MongoDB
 require("./models/db");
 
-const express = require("express");
 let app = express();
 app.use(express.json());
-
-//--------------Routes
-//require("./routes/JSroutes.js");
 
 //------------Pattern
 const classes = [
@@ -20,13 +18,15 @@ const classes = [
 ];
 
 //--------------Routes
+//require("./routes/JSroutes.js");
 app.get("/classes", function (req, res) {
   res.send(classes);
 });
 
 app.get("/classes/:id", function (req, res) {
   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
-  if (!findAclass) res.status(404).send("The class with that id was not found");
+  if (!findAclass)
+    return res.status(404).send("The class with that id was not found");
   res.send(findAclass);
 });
 
@@ -48,7 +48,8 @@ app.post("/classes", function (req, res) {
 
 app.put("/classes/:id", function (req, res) {
   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
-  if (!findAclass) res.status(404).send("The class with that id was not found");
+  if (!findAclass)
+    return res.status(404).send("The class with that id was not found");
   findAclass.name = req.body.name;
   findAclass.location = req.body.location;
   findAclass.price = req.body.price;
@@ -58,7 +59,8 @@ app.put("/classes/:id", function (req, res) {
 
 app.delete("/classes/:id", function (req, res) {
   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
-  if (!findAclass) res.status(404).send("The class with that id was not found");
+  if (!findAclass)
+    return res.status(404).send("The class with that id was not found");
   const index = classes.indexOf(findAclass);
   res.send(index);
   classes.splice(index, 1);
@@ -69,5 +71,5 @@ app.delete("/classes/:id", function (req, res) {
 const port = process.env.PORT || 3000;
 
 app.listen(port, function () {
-  console.log(`server has started on ${port}`);
+  console.log(`server has started on port ${port}`);
 });
