@@ -15,7 +15,8 @@ const classes = [
     name: "Zumba",
     location: "NorthWood Village",
     price: "P50",
-    schedule: "every Monday, 3PM"
+    schedule: "every Monday, 3PM",
+    link: "https://th.bing.com/th/id/OIP.ZbhLxJ7w_iAzsUWRfMzbGAAAAA?pid=ImgDet&rs=1"
   }
 ];
 
@@ -42,7 +43,8 @@ app.post("/classes", function (req, res) {
     name: req.body.name,
     location: req.body.location,
     price: req.body.price,
-    schedule: req.body.schedule
+    schedule: req.body.schedule,
+    link: req.body.schedule,
   };
   classes.push(postAclass);
   res.send(postAclass);
@@ -56,6 +58,7 @@ app.put("/classes/:id", function (req, res) {
   findAclass.location = req.body.location;
   findAclass.price = req.body.price;
   findAclass.schedule = req.body.schedule;
+  findAclass.link = req.body.link,
   res.send(findAclass);
 });
 
