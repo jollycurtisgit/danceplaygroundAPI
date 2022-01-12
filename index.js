@@ -1,9 +1,14 @@
 const express = require("express");
+const cors = require('cors')
+
+
+
 
 //------------MongoDB
 require("./models/db");
 
 let app = express();
+app.use(cors())
 app.use(express.json());
 
 //------------Pattern
