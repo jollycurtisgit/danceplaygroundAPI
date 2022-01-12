@@ -1,9 +1,6 @@
 const express = require("express");
 const cors = require('cors')
 
-
-
-
 //------------MongoDB
 require("./models/db");
 
@@ -22,7 +19,7 @@ const classes = [
   }
 ];
 
-//--------------Routes
+//--------------Routes for const classes
 //require("./routes/JSroutes.js");
 app.get("/classes", function (req, res) {
   res.send(classes);
@@ -71,6 +68,52 @@ app.delete("/classes/:id", function (req, res) {
   classes.splice(index, 1);
   res.send(findAclass);
 });
+
+//------------Pattern
+const signUp = [
+  {
+    fName: "Jolly",
+    lName: "Chua",
+    email: "jolly_chua@email.com"
+  }
+];
+
+//================== Routes for const signUp
+
+app.post("/signUp", function (req, res) {
+  const postAmember = {
+    fName: req.body.fName,
+    lName: req.body.lName,
+    email: req.body.email,
+  };
+  signUp.push(postAmember);
+  res.send(postAmember);
+});
+
+app.get("/members", function (req, res) {
+  res.send(signUp);
+});
+
+app.put("/editAccount/:email", function (req, res) {
+  let findAmember = signUp.find((c) => c.email === req.params.email);
+  if (!findAmember)
+    return res.status(404).send("The member with that email was not found");
+  findAmember.fName = req.body.fName;
+  findAmember.lName = req.body.lName;
+  findAmember.email = req.body.email;
+  res.send(findAmember);
+});
+
+app.delete("/deleteAccount/:email", function (req, res) {
+  let findAmember = signUp.find((c) => c.email === req.params.email);
+  if (!findAmember)
+    return res.status(404).send("The member with that email was not found");
+  const index = signUp.indexOf(findAmember);
+  res.send(index);
+  classes.splice(index, 1);
+  res.send(findAmember);
+});
+
 
 //---------------Port
 const port = process.env.PORT || 3000;
