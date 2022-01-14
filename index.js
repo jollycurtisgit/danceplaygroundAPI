@@ -1,15 +1,12 @@
 const express = require("express");
 const cors = require('cors')
-
 //------------MongoDB
 require("./models/db");
-
 let app = express();
 app.use(cors())
 app.use(express.json());
-
 //------------Pattern
-const classes = [
+let classes = [
   {
     id: 1,
     name: "Zumba",
@@ -22,35 +19,37 @@ const classes = [
 
 //--------------Routes for const classes
 //require("./routes/JSroutes.js");
+app.get("", function (req, res) {
+  res.send(`Welcome! Please add one of the ff to the url:
+   /classes , 
+   /class/:id , 
+   /add.class,
+   /edit.class/:id,
+   /delete.class/:id
+     `);
+});
 app.get("/classes", function (req, res) {
   res.send(classes);
 });
-
-app.get("/classes/:id", function (req, res) {
+app.get("/class/:id", function (req, res) {
   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
   if (!findAclass)
     return res.status(404).send("The class with that id was not found");
   res.send(findAclass);
 });
-
-app.get("", function (req, res) {
-  res.send("Hello Jolly!");
-});
-
-app.post("/classes", function (req, res) {
+app.post("/add.class", function (req, res) {
   const postAclass = {
     id: classes.length + 1,
     name: req.body.name,
     location: req.body.location,
     price: req.body.price,
     schedule: req.body.schedule,
-    link: req.body.schedule,
+    link: req.body.link,
   };
   classes.push(postAclass);
   res.send(postAclass);
 });
-
-app.put("/classes/:id", function (req, res) {
+app.put("/edit.class/:id", function (req, res) {
   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
   if (!findAclass)
     return res.status(404).send("The class with that id was not found");
@@ -62,27 +61,24 @@ app.put("/classes/:id", function (req, res) {
   res.send(findAclass);
 });
 
-app.delete("/classes/:id", function (req, res) {
+app.delete("/delete.class/:id", function (req, res) {
   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
   if (!findAclass)
-    return res.status(404).send("The class with that id was not found");
+    return res.status(404).send("The class with that id was not found");  
   const index = classes.indexOf(findAclass);
-  res.send(index);
+  //res.send(index);
   classes.splice(index, 1);
   res.send(findAclass);
 });
-
 //------------Pattern
-const signUp = [
+let signUp = [
   {
     fName: "Jolly",
     lName: "Chua",
     email: "jolly_chua@email.com"
   }
 ];
-
 //================== Routes for const signUp
-
 app.post("/signUp", function (req, res) {
   const postAmember = {
     fName: req.body.fName,
@@ -92,9 +88,14 @@ app.post("/signUp", function (req, res) {
   signUp.push(postAmember);
   res.send(postAmember);
 });
-
 app.get("/members", function (req, res) {
   res.send(signUp);
+});
+app.get("/member/:email", function (req, res) {
+  let findAmember = signUp.find((c) => c.email === req.params.email);
+  if (!findAmember)
+    return res.status(404).send("The class with that id was not found");
+  res.send(findAmember);
 });
 
 app.put("/editAccount/:email", function (req, res) {
@@ -106,7 +107,6 @@ app.put("/editAccount/:email", function (req, res) {
   findAmember.email = req.body.email;
   res.send(findAmember);
 });
-
 app.delete("/deleteAccount/:email", function (req, res) {
   let findAmember = signUp.find((c) => c.email === req.params.email);
   if (!findAmember)
@@ -116,11 +116,8 @@ app.delete("/deleteAccount/:email", function (req, res) {
   classes.splice(index, 1);
   res.send(findAmember);
 });
-
-
 //---------------Port
 const port = process.env.PORT || 3000;
-
 app.listen(port, function () {
   console.log(`server has started on port ${port}`);
 });

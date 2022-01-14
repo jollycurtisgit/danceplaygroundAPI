@@ -1,4 +1,3 @@
-const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
 	name: {
@@ -20,3 +19,5 @@ const userSchema = new mongoose.Schema({
 })
 
 mongoose.model('class', classSchema)
+
+
