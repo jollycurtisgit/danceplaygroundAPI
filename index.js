@@ -70,9 +70,11 @@ app.delete("/delete.class/:id", function (req, res) {
   classes.splice(index, 1);
   res.send(findAclass);
 });
+
 //------------Pattern
 let signUp = [
   {
+    accountNum: 1,
     fName: "Jolly",
     lName: "Chua",
     email: "jolly_chua@email.com"
@@ -81,6 +83,7 @@ let signUp = [
 //================== Routes for const signUp
 app.post("/signUp", function (req, res) {
   const postAmember = {
+    accountNum: signUp.length + 1,
     fName: req.body.fName,
     lName: req.body.lName,
     email: req.body.email,
@@ -107,8 +110,8 @@ app.put("/editAccount/:email", function (req, res) {
   findAmember.email = req.body.email;
   res.send(findAmember);
 });
-app.delete("/deleteAccount/:email", function (req, res) {
-  let findAmember = signUp.find((c) => c.email === req.params.email);
+app.delete("/deleteAccount/:accountNum", function (req, res) {
+  let findAmember = signUp.find((c) => c.accountNum === parseInt(req.params.accountNum));
   if (!findAmember)
     return res.status(404).send("The member with that email was not found");
   const index = signUp.indexOf(findAmember);
