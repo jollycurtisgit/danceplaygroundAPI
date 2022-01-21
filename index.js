@@ -13,28 +13,6 @@ app.use(express.json());
 
 
 //------------Pattern
-let classes = [
-  {
-    id: 1,
-    name: "Zumba",
-    location: "NorthWood Village",
-    price: "P50",
-    schedule: "every Monday, 3PM",
-    link: "https://th.bing.com/th/id/OIP.ZbhLxJ7w_iAzsUWRfMzbGAAAAA?pid=ImgDet&rs=1"
-  }
-];
-
-// app.delete("/delete.class/:id", function (req, res) {
-//   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
-//   if (!findAclass)
-//     return res.status(404).send("The class with that id was not found");  
-//   const index = classes.indexOf(findAclass);
-//   //res.send(index);
-//   classes.splice(index, 1);
-//   res.send(findAclass);
-// });
-
-//------------Pattern
 let signUp = [
   {
     accountNum: 1,
@@ -63,18 +41,7 @@ app.post("/members", function (req, res) {
   res.send(postAmember);
 });
 
-app.post("", function (req, res) {
-  const postAmember = {
-    accountNum: login.length + 1,
-    email: req.body.email,
-    password: req.body.password
-  };
-  login.push(postAmember);
-  res.send(postAmember);
-});
-app.get("", function (req, res) {
-  res.send(login);
-});
+
 
 
 app.get("/members", function (req, res) {
@@ -108,6 +75,7 @@ app.delete("/deleteAccount/:accountNum", function (req, res) {
   res.send(findAmember);
 });
 
+//Routes
 async function main(){
   await MongoUtil.connect(MONGO_URI, "danceplaygroundAPI");
   app.get("", async function (req, res) {
@@ -170,6 +138,7 @@ async function main(){
     res.send(updateAclass)
   });
 
+  //working - Delete a class 
   app.delete("/delete.class/:id", async function(req, res){
     const db = MongoUtil.getDB()
     let deleteAclass = {
@@ -185,6 +154,19 @@ async function main(){
     })
     res.send(deleteAclass)
   })
+
+  //Routes for Login
+  app.post("", async function (req, res) {
+    const userLogIn = {
+      accountNum: login.length + 1,
+      email: req.body.email,
+      password: req.body.password
+    };
+    const db = MongoUtil.getDB();
+    await db.collection('logIn').insertOne(userLogIn)
+    res.send(userLogIn);
+  });
+
 }
 
 main()
