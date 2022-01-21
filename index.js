@@ -24,40 +24,15 @@ let classes = [
   }
 ];
 
-
-app.post("/add.class", function (req, res) {
-  const postAclass = {
-    id: classes.length + 1,
-    name: req.body.name,
-    location: req.body.location,
-    price: req.body.price,
-    schedule: req.body.schedule,
-    link: req.body.link,
-  };
-  classes.push(postAclass);
-  res.send(postAclass);
-});
-app.put("/edit.class/:id", function (req, res) {
-  let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
-  if (!findAclass)
-    return res.status(404).send("The class with that id was not found");
-  findAclass.name = req.body.name;
-  findAclass.location = req.body.location;
-  findAclass.price = req.body.price;
-  findAclass.schedule = req.body.schedule;
-  findAclass.link = req.body.link,
-  res.send(findAclass);
-});
-
-app.delete("/delete.class/:id", function (req, res) {
-  let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
-  if (!findAclass)
-    return res.status(404).send("The class with that id was not found");  
-  const index = classes.indexOf(findAclass);
-  //res.send(index);
-  classes.splice(index, 1);
-  res.send(findAclass);
-});
+// app.delete("/delete.class/:id", function (req, res) {
+//   let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
+//   if (!findAclass)
+//     return res.status(404).send("The class with that id was not found");  
+//   const index = classes.indexOf(findAclass);
+//   //res.send(index);
+//   classes.splice(index, 1);
+//   res.send(findAclass);
+// });
 
 //------------Pattern
 let signUp = [
@@ -163,6 +138,7 @@ async function main(){
     res.send(classes);
   });
 
+  // working - Pull-up a class
   app.get("/class/:id", async function (req, res) {
     let id = req.params.id
     const db = MongoUtil.getDB();
@@ -174,6 +150,7 @@ async function main(){
     res.send(findAclass);
   });
 
+  // working - Edit a class 
   app.put("/class/:id", async function (req, res) {
     let id = req.params.id
     const db = MongoUtil.getDB()
@@ -192,6 +169,22 @@ async function main(){
     });
     res.send(updateAclass)
   });
+
+  app.delete("/delete.class/:id", async function(req, res){
+    const db = MongoUtil.getDB()
+    let deleteAclass = {
+      'id': classes.length + 1,
+      'name': req.body.name,
+      'location': req.body.location,
+      'price': req.body.price,
+      'schedule': req.body.schedule,
+      'link': req.body.link,
+    };
+    await db.collection('classes').deleteOne({
+      '_id': ObjectId(req.params.id)
+    })
+    res.send(deleteAclass)
+  })
 }
 
 main()
