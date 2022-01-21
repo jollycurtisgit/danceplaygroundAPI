@@ -154,8 +154,10 @@ async function main(){
   //   res.render('add_class_record')
   // });
 
-  app.get("/AddClasses", function (req, res) {
-    res.send(classes);
+  app.get("/AddClasses", async function (req, res) {
+    const db = MongoUtil.getDB();
+    let classRecords = await db.collection('classes').find({}).toArray();
+    res.send(classRecords);
   });
 
   // working - Add a class
