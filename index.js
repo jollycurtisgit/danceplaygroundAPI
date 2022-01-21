@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require('cors')
+const ObjectId = require('mongodb').ObjectId;
 
 require('dotenv').config();
 
@@ -23,17 +24,7 @@ let classes = [
   }
 ];
 
-//--------------Routes for const classes
-//require("./routes/JSroutes.js");
-app.get("/classes", function (req, res) {
-  res.send(classes);
-});
-app.get("/class/:id", function (req, res) {
-  let findAclass = classes.find((c) => c.id === parseInt(req.params.id));
-  if (!findAclass)
-    return res.status(404).send("The class with that id was not found");
-  res.send(findAclass);
-});
+
 app.post("/add.class", function (req, res) {
   const postAclass = {
     id: classes.length + 1,
@@ -150,10 +141,7 @@ async function main(){
     res.send(classes);
   });
 
-  // app.get("/AddClasses", function (req, res){
-  //   res.render('add_class_record')
-  // });
-
+   // working - Display all added classes  
   app.get("/AddClasses", async function (req, res) {
     const db = MongoUtil.getDB();
     let classRecords = await db.collection('classes').find({}).toArray();
@@ -170,10 +158,21 @@ async function main(){
       schedule: req.body.schedule,
       link: req.body.link,
     };
-    //classes.push(postAclass);
     const db = MongoUtil.getDB();
     await db.collection('classes').insertOne(postAclass)
     res.send(classes);
+  });
+
+  app.get("/class/:id", async function (req, res) {
+    let id = req.params.id
+    const db = MongoUtil.getDB();
+    let ID = classes.find((c) => c._id === parseInt(req.params._id));
+    let findAclass = await db.collection('classes').findOne({
+      '_id': ObjectId(id)
+    });
+    if (!findAclass)
+      return res.status(404).send("The class with that id was not found");
+    res.send(findAclass);
   });
 }
 
