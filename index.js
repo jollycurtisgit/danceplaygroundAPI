@@ -78,11 +78,7 @@ app.delete("/deleteAccount/:accountNum", function (req, res) {
 //Routes
 async function main(){
   await MongoUtil.connect(MONGO_URI, "danceplaygroundAPI");
-  app.get("", async function (req, res) {
-    const db = MongoUtil.getDB();
-    let classes = await db.collection('classes').find().toArray();
-    res.send(classes);
-  });
+ 
 
    // working - Display all added classes  
   app.get("/AddClasses", async function (req, res) {
@@ -156,6 +152,13 @@ async function main(){
   })
 
   //Routes for Login
+  // working - Display all added classes  
+  app.get("", async function (req, res) {
+    const db = MongoUtil.getDB();
+    let logInDetails = await db.collection('logIn').find({}).toArray();
+    res.send(logInDetails);
+  });
+
   app.post("", async function (req, res) {
     const userLogIn = {
       accountNum: login.length + 1,
