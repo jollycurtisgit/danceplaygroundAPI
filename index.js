@@ -152,16 +152,19 @@ async function main(){
   })
 
   //Routes for Login
-  // working - Display all added classes  
+  // working - Display all added users
   app.get("", async function (req, res) {
     const db = MongoUtil.getDB();
     let logInDetails = await db.collection('logIn').find({}).toArray();
     res.send(logInDetails);
   });
 
+  // working - Post a user
   app.post("", async function (req, res) {
     const userLogIn = {
       accountNum: login.length + 1,
+      fName: req.body.fName,
+      lName: req.body.lName,
       email: req.body.email,
       password: req.body.password
     };
