@@ -166,13 +166,31 @@ async function main(){
   app.get("/class/:id", async function (req, res) {
     let id = req.params.id
     const db = MongoUtil.getDB();
-    let ID = classes.find((c) => c._id === parseInt(req.params._id));
     let findAclass = await db.collection('classes').findOne({
       '_id': ObjectId(id)
     });
     if (!findAclass)
       return res.status(404).send("The class with that id was not found");
     res.send(findAclass);
+  });
+
+  app.put("/class/:id", async function (req, res) {
+    let id = req.params.id
+    const db = MongoUtil.getDB()
+    let updateAclass = {
+      'id': classes.length + 1,
+      'name': req.body.name,
+      'location': req.body.location,
+      'price': req.body.price,
+      'schedule': req.body.schedule,
+      'link': req.body.link,
+    };
+    await db.collection('classes').updateOne({
+      '_id': ObjectId(id)
+    },{
+      '$set': updateAclass
+    });
+    res.send(updateAclass)
   });
 }
 
