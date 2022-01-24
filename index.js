@@ -75,10 +75,25 @@ app.delete("/deleteAccount/:accountNum", function (req, res) {
   res.send(findAmember);
 });
 
+
+
+function ensureToken(req, res, next){
+  const  bearerHeader = req.headers["authorization"];
+  if (typeof bearerHeader !== 'undefined'){
+      const bearer = bearerHeader.split(" ");
+      const bearerToken = bearer[1];
+      req.token = bearerToken;
+      next();
+  } else {
+    res.sendStatus(403)
+  }
+};
+
+
+
 //Routes
 async function main(){
   await MongoUtil.connect(MONGO_URI, "danceplaygroundAPI");
- 
 
    // working - Display all added classes  
   app.get("/AddClasses", async function (req, res) {
@@ -89,8 +104,8 @@ async function main(){
 
   // working - Add a class
   app.post("/AddClasses", async function (req, res) {
+    console.log(req.body)
     const postAclass = {
-      id: classes.length + 1,
       name: req.body.name,
       location: req.body.location,
       price: req.body.price,
@@ -98,7 +113,7 @@ async function main(){
       link: req.body.link,
     };
     const db = MongoUtil.getDB();
-    await db.collection('classes').insertOne(postAclass)
+    const classes = await db.collection('classes').insertOne(postAclass)
     res.send(classes);
   });
 
@@ -151,29 +166,70 @@ async function main(){
     res.send(deleteAclass)
   })
 
+  
+
   //Routes for Login
   // working - Display all added users
-  app.get("", async function (req, res) {
-    const db = MongoUtil.getDB();
-    let logInDetails = await db.collection('logIn').find({}).toArray();
-    res.send(logInDetails);
-  });
+//  app.get("", async function (req, res) {
+  //  const db = MongoUtil.getDB();
+   // let logInDetails = await db.collection('logIn').find({}).toArray();
+   // res.send(logInDetails);
+  //});
+
+  // // working - Post a user
+  // app.post("", async function (req, res) {
+  //   const userLogIn = {
+  //     fName: req.body.fName,
+  //     lName: req.body.lName,
+  //     email: req.body.email,
+  //     password: req.body.password
+  //   };
+  //   const db = MongoUtil.getDB();
+  //   await db.collection('logIn').insertOne(userLogIn)
+  //   res.send(userLogIn);
+  // });
 
   // working - Post a user
   app.post("", async function (req, res) {
     const userLogIn = {
-      accountNum: login.length + 1,
-      fName: req.body.fName,
-      lName: req.body.lName,
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
     };
     const db = MongoUtil.getDB();
+    const token = jwt.sign({ userLogIn }, 'my_secret_key' );
     await db.collection('logIn').insertOne(userLogIn)
-    res.send(userLogIn);
+    res.json({token: token});
   });
 
+  // get a list of users  
+  app.get("/home", ensureToken, async function (req, res) {
+    const db = MongoUtil.getDB();
+    let logInDetails = await db.collection('logIn').find({}).toArray();
+          jwt.verify(req.token, 'my_secret_key', function(err, data){
+            if (err) {
+              res.sendStatus(403)
+            }else{
+              res.send(logInDetails);
+            }
+    })
+  });
+
+   // working - Post a user
+   app.post("/SignUp", async function (req, res) {
+     const postAmember = {
+      fName: req.body.fName,
+      lName: req.body.lName,
+      userName: req.body.userName,
+      email: req.body.email,
+      password: req.body.password,
+      password_confirm: req.body.password_confirm,
+  };
+     const db = MongoUtil.getDB();
+     await db.collection('SignUp').insertOne(postAmember)
+    res.send(postAmember);
+  });
 }
+
 
 main()
 //---------------Port
