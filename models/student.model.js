@@ -1,6 +1,6 @@
+const mongoose = require('mongoose')
 
-
-const studentSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     firstName: {
         type: String
     },
@@ -10,12 +10,12 @@ const studentSchema = new mongoose.Schema({
     email: {
         type: String
     },
-    mobile: {
+    mobileNo: {
         type: String
     },
-    village: {
+    password: {
         type: String
     }
 })
 
-mongoose.model('student', studentSchema);
+mongoose.model('User', studentSchema);
