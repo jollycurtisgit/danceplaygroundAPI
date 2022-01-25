@@ -1,4 +1,2 @@
 node_modules
 .env
-routes/Token.js
-MongoUtil.js
