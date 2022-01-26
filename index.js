@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const MongoUtil = require('./MongoUtil') 
 
-const MONGO_URL = process.env.MONGO_URL
+const MONGO_URI = process.env.MONGO_URI
 let app = express();
 app.use(cors())
 app.use(express.json());
@@ -48,12 +48,7 @@ app.post("/members", function (req, res) {
 app.get("/members", function (req, res) {
   res.send(signUp);
 });
-app.get("/member/:email", function (req, res) {
-  let findAmember = signUp.find((c) => c.email === req.params.email);
-  if (!findAmember)
-    return res.status(404).send("The class with that id was not found");
-  res.send(findAmember);
-});
+
 
 app.put("/editAccount/:email", function (req, res) {
   let findAmember = signUp.find((c) => c.email === req.params.email);
@@ -94,7 +89,7 @@ function ensureToken(req, res, next){
 
 //Routes
 async function main(){
-  await MongoUtil.connect(MONGO_URL, "danceplaygroundAPI");
+  await MongoUtil.connect(MONGO_URI, "danceplaygroundAPI");
 
    // working - Display all added classes  
   app.get("/AddClasses", async function (req, res) {
@@ -127,7 +122,7 @@ async function main(){
     });
     if (!findAclass)
       return res.status(404).send("The class with that id was not found");
-    res.send(findAclass);
+    res.send('classes');
   });
 
   // working - Edit a class 
@@ -202,6 +197,8 @@ async function main(){
     res.json({token: token});
   });
 
+ 
+   
   // get a list of users  
   app.get("/home", ensureToken, async function (req, res) {
     const db = MongoUtil.getDB();
@@ -214,6 +211,7 @@ async function main(){
             }
     })
   });
+
 
    // working - Post a user
    app.post("/SignUp", async function (req, res) {
@@ -234,7 +232,7 @@ async function main(){
 
 main()
 //---------------Port
-const port = process.env.PORT
+const port = process.env.PORT || 3000;
 app.listen(port, function () {
   console.log(`server has started on local host/port ${port}`);
 });
