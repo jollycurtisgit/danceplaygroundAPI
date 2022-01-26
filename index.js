@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken')
 
 require('dotenv').config();
 
-const MongoUtil = require('./MongoUtil') 
+const MongoUtil = require('./MongoUtiFl') 
 
-const MONGO_URI = process.env.MONGO_URI
+const MONGO_URL = process.env.MONGO_URL
 let app = express();
 app.use(cors())
 app.use(express.json());
@@ -94,7 +94,7 @@ function ensureToken(req, res, next){
 
 //Routes
 async function main(){
-  await MongoUtil.connect(MONGO_URI, "danceplaygroundAPI");
+  await MongoUtil.connect(MONGO_URL, "danceplaygroundAPI");
 
    // working - Display all added classes  
   app.get("/AddClasses", async function (req, res) {
