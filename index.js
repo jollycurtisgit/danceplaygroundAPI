@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 
 require('dotenv').config();
 
-const MongoUtil = require('./MongoUtiFl') 
+const MongoUtil = require('./MongoUtil') 
 
 const MONGO_URL = process.env.MONGO_URL
 let app = express();
