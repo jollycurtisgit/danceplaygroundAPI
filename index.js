@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken')
 
 require('dotenv').config();
 
-const MongoUtil = require('./MongoUtil') 
+const MongoUtil = require('./MongoUtil'); 
+const res = require("express/lib/response");
 
 const MONGO_URI = process.env.MONGO_URI
 let app = express();
@@ -126,7 +127,7 @@ async function main(){
   });
 
   // working - Edit a class 
-  app.put("/class/:id", async function (req, res) {
+  app.patch("/class/:id", async function (req, res) {
     let id = req.params.id
     const db = MongoUtil.getDB()
     let updateAclass = {
@@ -144,6 +145,24 @@ async function main(){
     });
     res.send(updateAclass)
   });
+
+  // app.patch('classesUpdates/:id', async (req, res) = {
+  //     await db.collection('classes').updateOne({
+  //     '_id': new ObjectId(req.params.id),
+  //   }, {
+  //     '$set': {
+  //             'id': classes.length + 1,
+  //             'name': req.body.name,
+  //             'location': req.body.location,
+  //             'price': req.body.price,
+  //             'schedule': req.body.schedule,
+  //             'link': req.body.link,
+  //              }
+  //   })
+  //   res.json({
+  //     'status':true
+  //   })
+  // });
 
   //working - Delete a class 
   app.delete("/delete.class/:id", async function(req, res){
