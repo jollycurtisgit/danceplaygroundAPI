@@ -133,7 +133,6 @@ async function main(){
   app.delete("/delete.class/:id", async function(req, res){
     const db = MongoUtil.getDB()
     let deleteAclass = {
-      'id': classes.length + 1,
       'name': req.body.name,
       'location': req.body.location,
       'price': req.body.price,
@@ -146,6 +145,23 @@ async function main(){
     res.send(deleteAclass)
   })
   
+  //Delete a class
+  app.get('/deleteClass/:id', async function(req, res){
+    //retrieve from the mongo db the document with the same req.params.id
+    const db = MongoUtil.getDB();
+    const documentToDelete = await db.collection('classes').findOne({
+         '_id': ObjectId(req.params.id)
+    })
+
+    res.render('confirm_delete_class_record',{
+      'classRecord': documentToDelete
+    })
+  })
+
+
+
+
+
   //Routes for Login
   // working - Display all added users
 //  app.get("", async function (req, res) {
