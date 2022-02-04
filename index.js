@@ -112,11 +112,10 @@ async function main(){
   });
 
   // working - Edit a class 
-  app.put("/class/:id", async function (req, res) {
+  app.patch("/class/:id", async function (req, res) {
     let id = req.params.id
     const db = MongoUtil.getDB()
     let updateAclass = {
-      'id': classes.length + 1,
       'name': req.body.name,
       'location': req.body.location,
       'price': req.body.price,
