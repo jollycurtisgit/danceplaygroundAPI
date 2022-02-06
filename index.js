@@ -158,6 +158,17 @@ async function main(){
     })
   })
 
+  app.get('/delete.class.2/:id', async function(req, res){
+    //retrieve from the mongo db the document with the same req.params.id
+    const db = MongoUtil.getDB();
+    const documentToDelete = await db.collection('classes').findOne({
+         '_id': ObjectId(req.params.id)
+    })
+
+    res.render('confirm_delete_class_record',{
+      'classRecord': documentToDelete
+    })
+  })
 
 
 
@@ -181,6 +192,88 @@ async function main(){
   //   await db.collection('logIn').insertOne(userLogIn)
   //   res.send(userLogIn);
   // });
+
+  // Trial Second Batch
+  // working - Display all added classes  2
+  app.get("/OurClasses", async function (req, res) {
+    const db = MongoUtil.getDB();
+    let classRecords = await db.collection('classes').find({}).toArray();
+    res.send(classRecords);
+  });
+  // working - Add a class 2
+  // app.post("/Class", async function (req, res) {
+  //   console.log(req.body)
+  //   const postAclass = {
+  //     name: req.body.name,
+  //     location: req.body.location,
+  //     price: req.body.price,
+  //     schedule: req.body.schedule,
+  //     link: req.body.link,
+  //     email: req.body.email,
+  //     password: req.body.password,
+  //   };
+  //   const db = MongoUtil.getDB();
+  //   const classes = await db.collection('classes').insertOne(postAclass)
+  //   res.send(classes);
+  // });
+
+
+
+  // working - Edit a class  2
+  app.patch("/Eclass/:id", async function (req, res) {
+    let id = req.params.id
+    const db = MongoUtil.getDB()
+    let updateAclass = {
+      'name': req.body.name,
+      'location': req.body.location,
+      'price': req.body.price,
+      'schedule': req.body.schedule,
+      'link': req.body.link,
+    };
+  if (('email' === req.body.email) && ('password' === req.body.email)){
+      await db.collection('classes').updateOne({
+                                                '_id': ObjectId(id)
+                                                },{
+                                                  '$set': updateAclass
+                                                });
+      res.send(updateAclass)}
+    else{
+      res.send("Your email or passowrd did not match any admin's credentials")
+    }
+  });
+
+  //working - Delete a class 2
+  app.delete("/deleteAclass/:id", async function(req, res){
+    const db = MongoUtil.getDB()
+    let deleteAclass = {
+      'name': req.body.name,
+      'location': req.body.location,
+      'price': req.body.price,
+      'schedule': req.body.schedule,
+      'link': req.body.link,
+    };
+    await db.collection('classes').deleteOne({
+      '_id': ObjectId(req.params.id)
+    })
+    res.send(deleteAclass)
+  })
+  
+  //Delete a class 2
+  app.get('/deleteMyClass/:id', async function(req, res){
+    //retrieve from the mongo db the document with the same req.params.id
+    const db = MongoUtil.getDB();
+    const documentToDelete = await db.collection('classes').findOne({
+         '_id': ObjectId(req.params.id)
+    })
+
+    res.render('confirm_delete_class_record',{
+      'classRecord': documentToDelete
+    })
+  })
+
+
+  //End of Trial Second Batch 2
+
   // working - Post a user
   app.post("", async function (req, res) {
     const userLogIn = {
@@ -200,7 +293,7 @@ async function main(){
     const db = MongoUtil.getDB();
     let logInDetails = await db.collection('logIn').find({}).toArray();
           jwt.verify(req.token, 'my_secret_key', function(err, data){
-            if (err) {
+            if (err) {l
               res.sendStatus(403)
             }else{
               res.send(logInDetails);
