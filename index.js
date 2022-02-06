@@ -41,7 +41,6 @@ app.get("/members", function (req, res) {
   res.send(signUp);
 });
 
-
 app.put("/editAccount/:email", function (req, res) {
   let findAmember = signUp.find((c) => c.email === req.params.email);
   if (!findAmember)
@@ -62,6 +61,7 @@ app.delete("/deleteAccount/:accountNum", function (req, res) {
   classes.splice(index, 1);
   res.send(findAmember);
 });
+
 function ensureToken(req, res, next){
   const  bearerHeader = req.headers["authorization"];
   if (typeof bearerHeader !== 'undefined'){
@@ -96,7 +96,7 @@ async function main(){
     };
     const db = MongoUtil.getDB();
     const classes = await db.collection('classes').insertOne(postAclass)
-    res.send(classes);
+    res.send(postAclass);
   });
   // working - Pull-up a class
   app.get("/class/:id", async function (req, res) {
@@ -164,12 +164,10 @@ async function main(){
     const documentToDelete = await db.collection('classes').findOne({
          '_id': ObjectId(req.params.id)
     })
-
     res.render('confirm_delete_class_record',{
       'classRecord': documentToDelete
     })
   })
-
 
 
 
@@ -200,23 +198,39 @@ async function main(){
     let classRecords = await db.collection('classes').find({}).toArray();
     res.send(classRecords);
   });
-  // working - Add a class 2
-  // app.post("/Class", async function (req, res) {
-  //   console.log(req.body)
-  //   const postAclass = {
-  //     name: req.body.name,
-  //     location: req.body.location,
-  //     price: req.body.price,
-  //     schedule: req.body.schedule,
-  //     link: req.body.link,
-  //     email: req.body.email,
-  //     password: req.body.password,
-  //   };
-  //   const db = MongoUtil.getDB();
-  //   const classes = await db.collection('classes').insertOne(postAclass)
-  //   res.send(classes);
-  // });
+  // NOT! working - Add a class 2
+  app.post("/Class", async function (req, res) {
+    console.log(req.body)
+    const postAclass = {
+      name: req.body.name,
+      location: req.body.location,
+      price: req.body.price,
+      schedule: req.body.schedule,
+      link: req.body.link,
+      email: req.body.email,
+      password: req.body.password,
+    };
+    const db = MongoUtil.getDB();
+    const classes = await db.collection('classes').insertOne(postAclass)
+    res.send(postAclass);
+  });
 
+  // working - Add a class
+  app.post("/TryClass", async function (req, res) {
+    console.log(req.body)
+    const postAclass = {
+      name: req.body.name,
+      location: req.body.location,
+      price: req.body.price,
+      schedule: req.body.schedule,
+      link: req.body.link,
+      email: req.body.email,
+      password: req.body.password,
+    };
+    const db = MongoUtil.getDB();
+    const classes = await db.collection('hello').insertOne(postAclass)
+    res.send(classes);
+  });
 
 
   // working - Edit a class  2
@@ -271,7 +285,6 @@ async function main(){
     })
   })
 
-
   //End of Trial Second Batch 2
 
   // working - Post a user
@@ -286,7 +299,7 @@ async function main(){
     res.json({token: token});
   });
 
-
+  
 
   // get a list of users  
   app.get("/home", ensureToken, async function (req, res) {
@@ -300,7 +313,6 @@ async function main(){
             }
     })
   });
-
 
    // working - Post a user
    app.post("/SignUp", async function (req, res) {
