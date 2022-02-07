@@ -84,20 +84,6 @@ async function main(){
     let classRecords = await db.collection('classes').find({}).toArray();
     res.send(classRecords);
   });
-  // working - Add a class
-  app.post("/AddClasses", async function (req, res) {
-    console.log(req.body)
-    const postAclass = {
-      name: req.body.name,
-      location: req.body.location,
-      price: req.body.price,
-      schedule: req.body.schedule,
-      link: req.body.link,
-    };
-    const db = MongoUtil.getDB();
-    const classes = await db.collection('classes').insertOne(postAclass)
-    res.send(postAclass);
-  });
   // working - Pull-up a class
   app.get("/class/:id", async function (req, res) {
     let id = req.params.id
@@ -215,7 +201,7 @@ async function main(){
     res.send(postAclass);
   });
 
-  // working - Add a class
+  //Wonderful! It's working! - Add a class
   app.post("/TryClass", async function (req, res) {
     console.log(req.body)
     const postAclass = {
@@ -226,9 +212,14 @@ async function main(){
       link: req.body.link,
       email: req.body.email,
       password: req.body.password,
+      duration: req.body.duration,
+      complexity: [req.body.complexity],
+      best_for: req.body.best_for,
+      category: req.body.category,
+      instructorName: req.body.instructorName,
     };
     const db = MongoUtil.getDB();
-    const classes = await db.collection('hello').insertOne(postAclass)
+    const classes = await db.collection('classes').insertOne(postAclass)
     res.send(classes);
   });
 
