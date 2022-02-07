@@ -104,9 +104,17 @@ async function main(){
     let updateAclass = {
       'name': req.body.name,
       'location': req.body.location,
+      'schedule': req.body.schedule,
+      'duration': req.body.duration,
+      'complexity': [req.body.complexity],
+      'best_for': req.body.best_for,
+      'category': req.body.category,
       'price': req.body.price,
       'schedule': req.body.schedule,
       'link': req.body.link,
+      'instructorName': req.body.instructorName,
+      'email': req.body.email,
+      'password': req.body.password,
     };
     await db.collection('classes').updateOne({
       '_id': ObjectId(id)
@@ -131,18 +139,6 @@ async function main(){
     res.send(deleteAclass)
   })
   
-  //Delete a class
-  app.get('/deleteClass/:id', async function(req, res){
-    //retrieve from the mongo db the document with the same req.params.id
-    const db = MongoUtil.getDB();
-    const documentToDelete = await db.collection('classes').findOne({
-         '_id': ObjectId(req.params.id)
-    })
-    res.render('confirm_delete_class_record',{
-      'classRecord': documentToDelete
-    })
-  })
-
   app.get('/delete.class.2/:id', async function(req, res){
     //retrieve from the mongo db the document with the same req.params.id
     const db = MongoUtil.getDB();
@@ -182,22 +178,6 @@ async function main(){
     const db = MongoUtil.getDB();
     let classRecords = await db.collection('classes').find({}).toArray();
     res.send(classRecords);
-  });
-  // NOT! working - Add a class 2
-  app.post("/Class", async function (req, res) {
-    console.log(req.body)
-    const postAclass = {
-      name: req.body.name,
-      location: req.body.location,
-      price: req.body.price,
-      schedule: req.body.schedule,
-      link: req.body.link,
-      email: req.body.email,
-      password: req.body.password,
-    };
-    const db = MongoUtil.getDB();
-    const classes = await db.collection('classes').insertOne(postAclass)
-    res.send(postAclass);
   });
 
   //Wonderful! It's working! - Add a class
@@ -245,35 +225,6 @@ async function main(){
       res.send("Your email or passowrd did not match any admin's credentials")
     }
   });
-
-  //working - Delete a class 2
-  app.delete("/deleteAclass/:id", async function(req, res){
-    const db = MongoUtil.getDB()
-    let deleteAclass = {
-      'name': req.body.name,
-      'location': req.body.location,
-      'price': req.body.price,
-      'schedule': req.body.schedule,
-      'link': req.body.link,
-    };
-    await db.collection('classes').deleteOne({
-      '_id': ObjectId(req.params.id)
-    })
-    res.send(deleteAclass)
-  })
-  
-  //Delete a class 2
-  app.delete('/deleteMyClass/:id', async function(req, res){
-    //retrieve from the mongo db the document with the same req.params.id
-    const db = MongoUtil.getDB();
-    const documentToDelete = await db.collection('classes').findOne({
-         '_id': ObjectId(req.params.id)
-    })
-    res.render('confirm_delete_class_record',{
-      'classRecord': documentToDelete
-    })
-  })
-
   //End of Trial Second Batch 2
 
   // working - Post a user
