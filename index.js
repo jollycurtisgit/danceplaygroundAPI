@@ -138,7 +138,6 @@ async function main(){
     const documentToDelete = await db.collection('classes').findOne({
          '_id': ObjectId(req.params.id)
     })
-
     res.render('confirm_delete_class_record',{
       'classRecord': documentToDelete
     })
@@ -264,13 +263,12 @@ async function main(){
   })
   
   //Delete a class 2
-  app.get('/deleteMyClass/:id', async function(req, res){
+  app.delete('/deleteMyClass/:id', async function(req, res){
     //retrieve from the mongo db the document with the same req.params.id
     const db = MongoUtil.getDB();
     const documentToDelete = await db.collection('classes').findOne({
          '_id': ObjectId(req.params.id)
     })
-
     res.render('confirm_delete_class_record',{
       'classRecord': documentToDelete
     })
